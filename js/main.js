@@ -344,6 +344,8 @@
     if (!dialog) return;
     if (!dialog.open) dialog.showModal();
     document.body.classList.add("is-locked");
+    const toggle = $("#menuToggle");
+    if (toggle) toggle.setAttribute("aria-expanded", "true");
     const close = $(".closebtn", dialog);
     if (close) window.setTimeout(() => close.focus(), 50);
   }
@@ -353,8 +355,13 @@
   }
 
   function syncBodyLock() {
-    if ($$("dialog[open]").length) document.body.classList.add("is-locked");
-    else document.body.classList.remove("is-locked");
+    if ($$("dialog[open]").length) {
+      document.body.classList.add("is-locked");
+    } else {
+      document.body.classList.remove("is-locked");
+      const toggle = $("#menuToggle");
+      if (toggle) toggle.setAttribute("aria-expanded", "false");
+    }
   }
 
   function bindEvents() {
@@ -419,7 +426,7 @@
       "scroll",
       () => {
         const header = $("#siteHeader");
-        if (header) header.classList.toggle("is-scrolled", window.scrollY > 8);
+        if (header) header.classList.toggle("is-scrolled", window.scrollY > 60);
       },
       { passive: true }
     );
@@ -451,6 +458,8 @@
 
   function init() {
     bindEvents();
+    const header = $("#siteHeader");
+    if (header) header.classList.toggle("is-scrolled", window.scrollY > 60);
     setupReveal();
     paintHours();
     paintStatus();
